@@ -13,6 +13,7 @@ jobs:
       - name: Get PR URL
         id: get-pr-url
         run: |
-          MERGED_PR_URL=https://github.com/${{ github.repository }}/pull/${{ github.event.ref | replace('refs/pull/','') }}
-          echo $MERGED_PR_URL
+          PR_NUMBER=$(echo ${{ github.ref }} | sed 's/refs\/pull\///')
+          MERGED_PR_URL=https://github.com/${{ github.repository }}/pull/${PR_NUMBER}
+          echo ${MERGED_PR_URL}
 
