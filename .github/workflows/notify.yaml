@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types:
+      - closed
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -13,7 +16,14 @@ jobs:
       - name: Get PR URL
         id: get-pr-url
         run: |
-          PR_NUMBER=$(echo ${{ github.ref }} | sed 's/refs\/pull\///')
-          MERGED_PR_URL=https://github.com/${{ github.repository }}/pull/${PR_NUMBER}
+          if [[ "${{ github.event.name }}" == "pull_request" ]]; then
+            PR_NUMBER=${{ github.event.number }}
+          else
+            PR_NUMBER=0
+          fi
+          MERGED_PR_URL=https://github.com/${{ github.repository }}
+          if [[ $PR_NUMBER > 0 ]]; then
+            MERGED_PR_URL=${MERGED_PR_URL}/pull/${PR_NUMBER}
+          fi
           echo ${MERGED_PR_URL}
 
