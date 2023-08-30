@@ -1,0 +1,18 @@
+name: Notify to other repos
+on:
+  push:
+    branches:
+      - main
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Get PR URL
+        id: get-pr-url
+        run: |
+          MERGED_PR_URL=https://github.com/${{ github.repository }}/pull/${{ github.event.ref | replace('refs/pull/','') }}
+          echo $MERGED_PR_URL
+
