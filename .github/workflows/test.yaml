@@ -23,9 +23,11 @@ jobs:
       matrix: ${{ fromJson(needs.get_matrix.outputs.matrix) }}
     steps:
       - name: echo
+        env:
+          dir: ${{ matrix.dir }}
         run: |
           echo ${{ matrix.repo }}
-          for v in ${{ matrix.dir[@] }}
+          for v in ${dir[@]}
           do
               echo "$v"
           done
