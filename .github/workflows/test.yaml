@@ -25,4 +25,7 @@ jobs:
       - name: echo
         run: |
           echo ${{ matrix.repo }}
-          echo ${{ matrix.dir }}
+          for v in ${{ matrix.dir[@] }}
+          do
+              echo "$v"
+          done
