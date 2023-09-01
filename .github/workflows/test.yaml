@@ -1,0 +1,28 @@
+name: Notify updated manifests to other repos
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  get_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+     - name: Checkout to repository
+       uses: actions/checkout@v3
+     - name: Set matrix data
+       id: set-matrix
+       run: echo "matrix=$(jq -c . < ./config.json)" >> $GITHUB_OUTPUT
+  notify:
+    runs-on: ubuntu-latest
+    needs:
+      - get_matrix
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.get_matrix.outputs.matrix) }}
+    steps:
+      - name: echo
+        run: |
+          echo ${{ matrix.repo }}
+          echo ${{ matrix.dir }}
